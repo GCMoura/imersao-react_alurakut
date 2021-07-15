@@ -48,6 +48,11 @@ export default function Home() {
   function handleSubmit(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
+<<<<<<< HEAD
+=======
+    
+    const imagePicsum = Picsum.url()
+>>>>>>> picsum
 
     const community = {
       id: new Date().toISOString(),
