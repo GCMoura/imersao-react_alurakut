@@ -3,7 +3,7 @@ import MainGrid from '../src/components/MainGrid/index'
 import Box from '../src/components/Box/index'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
-
+import { Picsum } from 'picsum-photos'
 import { wiki } from 'wikipedia'
 
 function ProfileSidebar({ githubUser }){
@@ -48,16 +48,12 @@ export default function Home() {
   function handleSubmit(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
-<<<<<<< HEAD
-=======
-    
     const imagePicsum = Picsum.url()
->>>>>>> picsum
 
     const community = {
       id: new Date().toISOString(),
       title: formData.get('title'),
-      image: formData.get('image')
+      image: imagePicsum
     }
     
     setCommunities([...communities, community])
@@ -90,14 +86,7 @@ export default function Home() {
                   type="text"
                 />
               </div>
-              <div>
-                <input  
-                    placeholder="Coloque uma URL para usarmos de capa" 
-                    name="image"
-                    aria-label="Coloque uma URL para usarmos de capa"
-                  />
-              </div>
-
+              
               <button>
                 Criar comunidade
               </button>
