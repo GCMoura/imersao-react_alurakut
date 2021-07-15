@@ -4,7 +4,6 @@ import Box from '../src/components/Box/index'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
 import { Picsum } from 'picsum-photos'
-import { wiki } from 'wikipedia'
 
 function ProfileSidebar({ githubUser }){
   return (
@@ -35,13 +34,6 @@ export default function Home() {
     'omariosouto',
     'gcmoura'
   ]
-
-  useEffect(() => {
-    async () => {
-      const page = await wiki.page('Batman')
-      console.log(page)
-    }
-  }, [])
 
   const [communities, setCommunities] = useState([])
 
@@ -101,15 +93,17 @@ export default function Home() {
             </h2>
             
             <ul>
-              { communities.map((community) => {
-                return (
-                  <li key={ community.id }>
-                    <a href={`/user/${community.title}`}  >
-                      <img src={community.image}/>
-                      <span> { community.title } </span>
-                    </a>
-                  </li>
-                )
+              { communities.map((community, index) => {
+                if(index < 6){
+                  return (
+                    <li key={ community.id }>
+                      <a href={`/user/${community.title}`}  >
+                        <img src={community.image}/>
+                        <span> { community.title } </span>
+                      </a>
+                    </li>
+                  )
+                }
               }) }
 
             </ul>
