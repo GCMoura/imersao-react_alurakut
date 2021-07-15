@@ -9,6 +9,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    background-image: url(https://images.pexels.com/photos/877971/pexels-photo-877971.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+    background-repeat: no-repeat;
+    background-size: cover;
     background-color: #D9E6F6;
     font-family: sans-serif;
   }

@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "next": "latest",
+    "picsum-photos": "^3.0.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",

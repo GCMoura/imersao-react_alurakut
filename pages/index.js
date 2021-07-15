@@ -3,6 +3,8 @@ import MainGrid from '../src/components/MainGrid/index'
 import Box from '../src/components/Box/index'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
+import { Picsum } from 'picsum-photos'
+
 
 function ProfileSidebar({ githubUser }){
   return (
@@ -39,11 +41,12 @@ export default function Home() {
   function handleSubmit(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
+    const imagePicsum = Picsum.url()
 
     const community = {
       id: new Date().toISOString(),
       title: formData.get('title'),
-      image: formData.get('image')
+      image: imagePicsum
     }
     
     setCommunities([...communities, community])
@@ -75,13 +78,6 @@ export default function Home() {
                   aria-label="Qual vai ser o nome da sua comunidade?"
                   type="text"
                 />
-              </div>
-              <div>
-                <input  
-                    placeholder="Coloque uma URL para usarmos de capa" 
-                    name="image"
-                    aria-label="Coloque uma URL para usarmos de capa"
-                  />
               </div>
 
               <button>
@@ -116,14 +112,16 @@ export default function Home() {
             <h2 className="smallTitle" >
               Pessoas da comunidade ({ favoritePeople.length })
             </h2>
-
+            
             <ul>
               { favoritePeople.map((person, index) => {
                 if(index < 6){
                   return (
                     <li key={ person }>
-                      <a href={`/user/${person}`}  >
-                        <img src={`https://github.com/${person}.png`}/>
+                      <a href={`https://github.com/${person}`}  >
+                        <img 
+                          src={`https://github.com/${person}.png`}
+                        />
                         <span> { person } </span>
                       </a>
                     </li>
