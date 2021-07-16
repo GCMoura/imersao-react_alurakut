@@ -5,37 +5,42 @@ import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet 
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
 import { Picsum } from 'picsum-photos'
 
-function ProfileSidebar({ githubUser }){
-  return (
-    <Box as="aside">
-      <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px' }}/>
-      <hr />
-      <p>
-        <a className='boxLink' href={`https://github.com/${githubUser}`}>
-          @{githubUser}
-        </a>     
-      </p>
-      <hr />
-
-      <AlurakutProfileSidebarMenuDefault /> 
-    </Box>
-  )
-}
+import ProfileSidebar from '../src/hooks/ProfileSideBar'
+import ProfileRelationsBox from '../src/hooks/ProfileRelationsBox'
 
 export default function Home() {
   const githubUser = 'GCMoura'
 
-  const favoritePeople = [ 
-    'peas', 
-    'juunegreiros', 
-    'rafaballerini', 
-    'marcobrunodev',
-    'felipefialho',
-    'omariosouto',
-    'gcmoura'
-  ]
-
   const [communities, setCommunities] = useState([])
+  const [followers, setFollowers] = useState([])
+  const [following, setFollowing] = useState([])
+
+  useEffect(() => {
+    try {
+      fetch('https://api.github.com/users/GCMoura/followers')
+        .then((serverResponse) => {
+          return serverResponse.json()
+        })
+        .then((response) => {
+          setFollowers(response)
+        })
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      fetch('https://api.github.com/users/GCMoura/following')
+        .then((serverResponse) => {
+          return serverResponse.json()
+        })
+        .then((response) => {
+          setFollowing(response)
+        })
+    } catch (error) {
+      console.error(error)
+    }
+
+  }, [])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -109,27 +114,16 @@ export default function Home() {
             </ul>
           </ProfileRelationsBoxWrapper>
 
-          <ProfileRelationsBoxWrapper >
-            <h2 className="smallTitle" >
-              Pessoas da comunidade ({ favoritePeople.length })
-            </h2>
+          < ProfileRelationsBox
+            title="Seguidores" 
+            items={followers}
+          />  
 
-            <ul>
-              { favoritePeople.map((person, index) => {
-                if(index < 6){
-                  return (
-                    <li key={ person }>
-                      <a href={`/user/${person}`}  >
-                        <img src={`https://github.com/${person}.png`}/>
-                        <span> { person } </span>
-                      </a>
-                    </li>
-                  )
-                }
-              }) }
-
-            </ul>
-          </ProfileRelationsBoxWrapper>
+          < ProfileRelationsBox
+            title="Seguindo" 
+            items={following}
+          />         
+        
         </div>
       </MainGrid>
     </>
