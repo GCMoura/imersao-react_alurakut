@@ -12,6 +12,7 @@ export default function Home() {
   const githubUser = 'GCMoura'
 
   const [communities, setCommunities] = useState([])
+  const [feed, setFeed] = useState([])
   const [followers, setFollowers] = useState([])
   const [following, setFollowing] = useState([])
 
@@ -56,6 +57,19 @@ export default function Home() {
     setCommunities([...communities, community])
   }
 
+  function handleFeedSubmit(event){
+    event.preventDefault()
+    const formData = new FormData(event.target)
+
+    const currentFeed = {
+      id: new Date().toISOString(),
+      date: new Date().toLocaleDateString('pt-BR'),
+      feed: formData.get('feed')
+    }
+
+    setFeed([...feed, currentFeed])
+  }
+
   return (
     <>
       <AlurakutMenu githubUser={githubUser}/>
@@ -66,7 +80,7 @@ export default function Home() {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box >
             <h1 className="title">
-              Bem vindo(a)
+              Bem vindo(a) {githubUser}
             </h1>
             <OrkutNostalgicIconSet />
           </Box>
@@ -88,6 +102,40 @@ export default function Home() {
                 Criar comunidade
               </button>
             </form>
+          </Box>
+
+          <Box>
+            <form onSubmit={handleFeedSubmit}>
+              <div>
+                <input 
+                  placeholder="O que está pensando?"
+                  name="feed"
+                  aria-label="O que está pensando?"
+                  type="text"
+                />
+              </div>
+
+              <button>
+                  Postar
+              </button>
+            </form>
+          </Box>
+
+          <Box>
+            <h2 className="subTitle">Feed</h2>
+
+            <ul style={{ listStyleType: "none" }}>
+              { feed.map((item) => {
+                return(
+                  <li key={item.id}>
+                    <h6>{ item.date }</h6>
+                    <p>{ item.feed }</p>
+                    <hr />
+                  </li>
+                  )
+              }) }
+            </ul>
+          
 
           </Box>
         </div>
