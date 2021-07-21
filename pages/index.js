@@ -41,20 +41,71 @@ export default function Home() {
       console.error(error)
     }
 
+    try {
+      fetch('https://graphql.datocms.com/', {
+        method: 'POST',
+        //dados do DatoCMS
+        headers: {
+          'Authorization': '229af60a8bd95fe2fc75f760873d48',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'          
+        },
+        body: JSON.stringify({ "query": `
+        {
+          allCommunities {
+            id
+            title
+            imageurl
+            _firstPublishedAt
+          }
+        
+          _allCommunitiesMeta {
+            count
+          }
+        }
+        ` })
+      })
+        .then((serverResponse) => serverResponse.json())
+        .then((response) => {
+          const serverCommunities = response.data.allCommunities
+          console.log(serverCommunities)
+
+          setCommunities(serverCommunities)
+        })
+    } catch (error) {
+      console.error(error) 
+    }
+
   }, [])
 
   function handleSubmit(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
     const imagePicsum = Picsum.url()
-
+    
     const community = {
-      id: new Date().toISOString(),
       title: formData.get('title'),
-      image: imagePicsum
+      imageurl: imagePicsum
     }
     
-    setCommunities([...communities, community])
+    try {
+      fetch('/api/communities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(community)
+      })
+        .then(async (response) => {
+          const data = await response.json()
+
+          const community = data.recordCreated
+          setCommunities([...communities, community])
+        })
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   function handleFeedSubmit(event){
@@ -150,8 +201,8 @@ export default function Home() {
                 if(index < 6){
                   return (
                     <li key={ community.id }>
-                      <a href={`/user/${community.title}`}  >
-                        <img src={community.image}/>
+                      <a href={`/communities/${community.id}`}  >
+                        <img src={community.imageurl}/>
                         <span> { community.title } </span>
                       </a>
                     </li>
