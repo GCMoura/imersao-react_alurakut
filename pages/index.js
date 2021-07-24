@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import nookies from 'nookies'
+import jwt from 'jsonwebtoken'
 import MainGrid from '../src/components/MainGrid/index'
 import Box from '../src/components/Box/index'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
@@ -8,8 +10,8 @@ import { Picsum } from 'picsum-photos'
 import ProfileSidebar from '../src/hooks/ProfileSideBar'
 import ProfileRelationsBox from '../src/hooks/ProfileRelationsBox'
 
-export default function Home() {
-  const githubUser = 'GCMoura'
+export default function Home(props) {
+  const githubUser = props.githubUser
 
   const [communities, setCommunities] = useState([])
   const [feed, setFeed] = useState([])
@@ -18,7 +20,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      fetch('https://api.github.com/users/GCMoura/followers')
+      fetch(`https://api.github.com/users/${githubUser}/followers`)
         .then((serverResponse) => {
           return serverResponse.json()
         })
@@ -30,7 +32,7 @@ export default function Home() {
     }
 
     try {
-      fetch('https://api.github.com/users/GCMoura/following')
+      fetch(`https://api.github.com/users/${githubUser}/following`)
         .then((serverResponse) => {
           return serverResponse.json()
         })
@@ -68,8 +70,6 @@ export default function Home() {
         .then((serverResponse) => serverResponse.json())
         .then((response) => {
           const serverCommunities = response.data.allCommunities
-          console.log(serverCommunities)
-
           setCommunities(serverCommunities)
         })
     } catch (error) {
@@ -227,4 +227,27 @@ export default function Home() {
       </MainGrid>
     </>
   )
+}
+ //só aparece no backend
+export async function getStaticProps(ctx) {
+  console.log(nookies.get(ctx))
+  const cookies = nookies.get(ctx);
+  const token = cookies.USER_TOKEN;
+  const decodedToken = jwt.decode(token);
+  const githubUser = decodedToken?.githubUser;
+
+  if (!githubUser) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  
+  return {
+    props: {
+      githubUser: githubUser
+    },
+  }
 }
