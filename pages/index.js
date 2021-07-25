@@ -229,9 +229,9 @@ export default function Home(props) {
   )
 }
  //só aparece no backend
-export async function getStaticProps(ctx) {
-  console.log(nookies.get(ctx))
-  const cookies = nookies.get(ctx);
+export async function getServerSideProps(context) {
+  
+  const cookies = nookies.get(context);
   const token = cookies.USER_TOKEN;
   const decodedToken = jwt.decode(token);
   const githubUser = decodedToken?.githubUser;

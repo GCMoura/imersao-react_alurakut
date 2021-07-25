@@ -19,7 +19,7 @@ export default function LoginPage(){
     .then(async (serverResponse) => {
       const responseData = await serverResponse.json()
       const token = responseData.token
-
+      
       nookies.set(null, 'USER_TOKEN', token, {
         path: "/",
         maxAge: 86400 * 7
